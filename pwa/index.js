@@ -2,6 +2,26 @@ if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./worker.js').then((registration) => {
             console.log('Service Worker registration completed with scope: ', registration.scope)
+            registration.pushManager.getSubscription().then(function(sub) {
+              if (sub === null) {
+                // Update UI to ask user to register for Push
+                console.log('Not subscribed to push service!');
+                registration.pushManager.subscribe({
+                  userVisibleOnly: true
+                }).then(function(subs) {
+                  console.log('Endpoint URL: ', subs.endpoint);
+                }).catch(function(e) {
+                  if (Notification.permission === 'denied') {
+                    console.warn('Permission for notifications was denied');
+                  } else {
+                    console.error('Unable to subscribe to push', e);
+                  }
+                });
+              } else {
+                // We have a subscription, update the database
+                console.log('Subscription object: ', subs);
+              }
+            });
         }, (err) => {
             console.log('Service Worker registration failed', err)
         })
@@ -9,6 +29,29 @@ if ('serviceWorker' in navigator) {
 } else {
     console.log('Service Workers not supported')
 }
+
+
+if (!('Notification' in window)) {
+  console.log('This browser does not support notifications!');
+} else {
+  Notification.requestPermission(status => {
+    console.log('Notification permission status:', status);
+  });
+}
+
+if (Notification.permission == 'granted') {
+  navigator.serviceWorker.getRegistration().then(reg => {
+
+    // TODO 2.4 - Add 'options' object to configure the notification
+    // reg.pushManager.subscribe({userVisibleOnly: true}).then(subs => {
+    //   console.log(subs);
+    //   reg.showNotification('Hello world!');
+    // })
+    reg.showNotification('Hello world!');
+    
+  });
+}
+
 
 fetch('http://localhost:8000/posts/', {
     method: 'GET',
