@@ -45,7 +45,7 @@
       },
       {
         "src": "images/icons/icon-512x512.png",
-        "sizes": "400x400",
+        "sizes": "512x512",
         "type": "image/png"
       }
     ],

@@ -45,7 +45,6 @@ if ('serviceWorker' in navigator) {
               } else {
                 // We have a subscription, update the database
                 console.log('Subscription object: ', sub);
-                console.log(JSON.stringify(sub));
               }
             });
         }, (err) => {
@@ -134,7 +133,7 @@ const postsLoader = () => {
   let postHTML, content, id, timestamp, likeCount, commentCount, username;
   let posts = fetchGetter("http://localhost:8000/posts/").then(posts => {
     postContainer.empty();
-    posts.forEach((post) => {
+    posts.reverse().forEach((post) => {
       // console.log(post);
       content = post.content;
       id = post.id;
@@ -145,9 +144,7 @@ const postsLoader = () => {
       postHTML=`<div class="card mt-3"> <div class="card-body"> <h5 class="card-title">${username}</h5><p class="card-text">${content}</p><div class="row"> <a href="#" class="text-secondary like-post" id="like-post-${id}"> <i class="mx-3 fa fa-thumbs-o-up"></i> </a> <a href="#"class="text-secondary like-post-show" id="like-post-show-users-${id}">${likeCount}</a> <a href="#" class="text-secondary comment-post" id="comment-post-${id}"> <i class="mx-3 fa fa-comments-o"></i> </a> <a href="#" class="text-secondary comment-post-show" id="comment-post-show-users-${id}">${commentCount}</a> <div class="ml-auto mr-3">${timestamp}</div></div><hr> <div class="collapse" id="comment-collapse-${id}"> <div class="card card-body"> <ul class="list-group" id="comment-list-group-${id}"> </ul> </div></div><form> <div class="input-group mt-3"> <input type="text" class="form-control" id="comment-content-${id}" placeholder="Comment"> <div class="input-group-append"> <button type="button" class="post-commentary btn btn-primary" id="submit-commentary-${id}" class="btn btn-primary">Submit</button> </div></div></form> </div></div>`;
       postContainer.append(postHTML);
     })
-  })
-
-  
+  })  
 }
 
 
