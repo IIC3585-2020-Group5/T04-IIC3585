@@ -7,6 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.utils import IntegrityError
+from pywebpush import webpush
+from .utils import send_notification
 
 # Create your views here.
 def get_posts(request):
@@ -37,6 +39,7 @@ def new_post(request):
         post.content = body['content']
         post.username = body['username']
         post.save()
+        send_notification(post.content)
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=405)
@@ -105,6 +108,7 @@ def new_comment(request):
     else:
         return HttpResponse(status=405)
 
+
 def check_like(request, id, username):
     try:
         post = Post.objects.get(id__exact=int(id))
@@ -115,3 +119,24 @@ def check_like(request, id, username):
     except Like.DoesNotExist:
         return HttpResponse(status=404)
     return HttpResponse(status=200)
+
+
+@csrf_exempt
+def new_subscription(request):
+    if request.method == "POST":
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        try:
+            subscription = NotificationSubscription.objects.get(endpoint__exact=str(body['endpoint']))
+        except NotificationSubscription.DoesNotExist:
+            subscription = NotificationSubscription()
+            subscription.endpoint = str(body['endpoint'])
+            subscription.auth = str(body['keys']['auth'])
+            subscription.p256dh = str(body['keys']['p256dh'])
+            subscription.save()
+
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=405)
+
+

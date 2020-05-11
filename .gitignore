@@ -1,3 +1,4 @@
 .vscode/
 api/env
 *.pyc
+api/PWAAPI/private_key.pem

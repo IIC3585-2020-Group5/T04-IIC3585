@@ -2,7 +2,7 @@
 import http.server
 import socketserver
 
-PORT = 8070
+PORT = 8001
 
 Handler = http.server.SimpleHTTPRequestHandler
 Handler.extensions_map.update({

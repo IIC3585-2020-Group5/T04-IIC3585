@@ -27,4 +27,5 @@ urlpatterns = [
     path(r'comments/<int:id>/', get_comments),
     path(r'likes/<int:id>/', get_likes),
     path(r'posts/<int:id>/liked/<str:username>/', check_like),
+    path(r'notification/subscribe', new_subscription),
 ]

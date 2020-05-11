@@ -22,9 +22,18 @@ class Comment(models.Model):
 
 
 class Like(models.Model):
-    username = models.TextField(null=False, blank=False, unique=True)
+    username = models.TextField(null=False, blank=False)
     post = models.ForeignKey('Post', related_name='likes', on_delete=models.SET_NULL, blank=True, null=True)
+
+    class Meta:
+        unique_together = ('username', 'post')
+
 
     def __str__(self):
         return f"{self.username}: Like To {self.post.id}"
 
+
+class NotificationSubscription (models.Model):
+    endpoint = models.TextField(null=False, blank=False)
+    auth = models.TextField(null=False, blank=False)
+    p256dh = models.TextField(null=False, blank=False)
