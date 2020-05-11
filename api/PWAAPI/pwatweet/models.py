@@ -18,7 +18,7 @@ class Comment(models.Model):
     username = models.TextField(null=False, blank=False)
 
     def __str__(self):
-        return f"{self.username}: {self.content} To {self.post.id} @ {self.timestamp}"
+        return f"{self.username}: {self.content} @ {self.timestamp}"
 
 
 class Like(models.Model):
@@ -30,7 +30,7 @@ class Like(models.Model):
 
 
     def __str__(self):
-        return f"{self.username}: Like To {self.post.id}"
+        return f"{self.username}"
 
 
 class NotificationSubscription (models.Model):
